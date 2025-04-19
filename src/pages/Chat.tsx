@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Send, Bot, User } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 const Chat = () => {
   const { userProfile } = useApp();
@@ -33,12 +34,9 @@ const Chat = () => {
     setIsLoading(true);
     
     try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      // Call Supabase Edge Function for chat
+      const { data, error } = await supabase.functions.invoke('chat', {
+        body: {
           message: userMessage,
           userProfile: {
             name: userProfile.name,
@@ -47,16 +45,23 @@ const Chat = () => {
             healthConditions: userProfile.healthConditions,
             fitnessGoal: userProfile.fitnessGoal
           }
-        }),
+        },
       });
       
-      if (!response.ok) {
-        throw new Error('Failed to get AI response');
+      if (error) {
+        console.error("Error from Edge Function:", error);
+        throw new Error(error.message);
       }
       
-      const data = await response.json();
-      setMessages(prev => [...prev, { text: data.response, sender: 'ai' }]);
+      if (data?.response) {
+        setMessages(prev => [...prev, { text: data.response, sender: 'ai' }]);
+      } else if (data?.error) {
+        throw new Error(data.error);
+      } else {
+        throw new Error('Invalid response format from AI');
+      }
     } catch (error) {
+      console.error("Chat error:", error);
       toast({
         title: "Error",
         description: "Failed to get AI response. Please try again.",

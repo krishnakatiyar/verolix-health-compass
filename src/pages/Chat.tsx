@@ -53,6 +53,8 @@ const Chat = () => {
         throw new Error(error.message);
       }
       
+      console.log("Response from Edge Function:", data);
+      
       if (data?.response) {
         setMessages(prev => [...prev, { text: data.response, sender: 'ai' }]);
       } else if (data?.error) {

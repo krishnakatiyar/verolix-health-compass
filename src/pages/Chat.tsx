@@ -5,16 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Send, Bot, User } from 'lucide-react';
-
-// Sample AI responses for the chat
-const sampleResponses = [
-  "Based on your profile, I'd recommend focusing on strength training 3 times per week to help achieve your fitness goals.",
-  "To improve your sleep quality, try avoiding screen time at least 1 hour before bed and maintain a consistent sleep schedule.",
-  "For your goal of building muscle, aim for 1.6-2.2g of protein per kg of body weight daily.",
-  "When experiencing muscle soreness, gentle stretching and adequate hydration can help speed up recovery.",
-  "Your current step count is good! Research shows that 7,000-8,000 steps daily provides most health benefits.",
-  "To prevent workout plateaus, consider changing your routine every 4-6 weeks by adjusting exercises, sets, or intensity."
-];
+import { useToast } from '@/components/ui/use-toast';
 
 const Chat = () => {
   const { userProfile } = useApp();
@@ -22,32 +13,58 @@ const Chat = () => {
     { text: `Hi ${userProfile.name}! I'm your Verolix health assistant. How can I help you today?`, sender: 'ai' }
   ]);
   const [input, setInput] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
   
-  // Auto-scroll to bottom of chat
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
   
-  const handleSendMessage = (e?: React.FormEvent) => {
+  const handleSendMessage = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     
     if (input.trim() === '') return;
     
     // Add user message
+    const userMessage = input;
     setMessages(prev => [...prev, { text: input, sender: 'user' }]);
     setInput('');
+    setIsLoading(true);
     
-    // Simulate AI thinking
-    setIsTyping(true);
-    
-    // Simulate AI response after a short delay
-    setTimeout(() => {
-      const randomResponse = sampleResponses[Math.floor(Math.random() * sampleResponses.length)];
-      setMessages(prev => [...prev, { text: randomResponse, sender: 'ai' }]);
-      setIsTyping(false);
-    }, 1500);
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: userMessage,
+          userProfile: {
+            name: userProfile.name,
+            age: userProfile.age,
+            gender: userProfile.gender,
+            healthConditions: userProfile.healthConditions,
+            fitnessGoal: userProfile.fitnessGoal
+          }
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to get AI response');
+      }
+      
+      const data = await response.json();
+      setMessages(prev => [...prev, { text: data.response, sender: 'ai' }]);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to get AI response. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -65,25 +82,23 @@ const Chat = () => {
               className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div 
-                className={`flex max-w-[80%] ${
+                className={`flex max-w-[80%] items-start gap-2 ${
                   message.sender === 'user' 
                     ? 'bg-verolix-purple text-white rounded-tl-lg rounded-tr-lg rounded-bl-lg' 
                     : 'bg-gray-100 rounded-tl-lg rounded-tr-lg rounded-br-lg'
                 } px-4 py-2`}
               >
-                <div className="mr-2">
-                  {message.sender === 'user' ? (
-                    <User className="h-5 w-5" />
-                  ) : (
-                    <Bot className="h-5 w-5" />
-                  )}
-                </div>
-                <span>{message.text}</span>
+                {message.sender === 'user' ? (
+                  <User className="h-5 w-5 mt-1" />
+                ) : (
+                  <Bot className="h-5 w-5 mt-1" />
+                )}
+                <span className="whitespace-pre-wrap">{message.text}</span>
               </div>
             </div>
           ))}
           
-          {isTyping && (
+          {isLoading && (
             <div className="flex justify-start">
               <div className="bg-gray-100 rounded-lg px-4 py-2">
                 <span className="inline-block">
@@ -102,10 +117,12 @@ const Chat = () => {
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask me about exercise, diet, sleep..."
             className="flex-grow"
+            disabled={isLoading}
           />
           <Button 
             type="submit"
             className="bg-verolix-purple hover:bg-verolix-dark-purple"
+            disabled={isLoading}
           >
             <Send className="h-4 w-4" />
           </Button>

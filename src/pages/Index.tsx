@@ -9,7 +9,7 @@ import Chat from './Chat';
 import Profile from './Profile';
 
 const AppContent = () => {
-  const { activeTab, showProfileSheet } = useApp();
+  const { activeTab } = useApp();
   
   // Render content based on active tab
   const renderContent = () => {
@@ -26,11 +26,6 @@ const AppContent = () => {
         return <Home />;
     }
   };
-  
-  // If profile is being shown, display profile instead of tab content
-  if (showProfileSheet) {
-    return <Profile />;
-  }
   
   return renderContent();
 };

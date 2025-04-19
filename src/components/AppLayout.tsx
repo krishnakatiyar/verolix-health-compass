@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Home, Dumbbell, Apple, MessageSquare, User, Menu } from 'lucide-react';
+import Profile from '@/pages/Profile';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -89,7 +90,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       </header>
       
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto">{children}</main>
+      <main className="flex-1 overflow-y-auto">
+        {showProfileSheet ? <Profile /> : children}
+      </main>
       
       {/* Bottom Navigation */}
       <nav className="bg-white border-t border-gray-200 flex justify-around py-2">

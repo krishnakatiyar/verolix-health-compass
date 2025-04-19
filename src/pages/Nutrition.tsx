@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useApp } from '@/contexts/AppContext';
 import { Card } from '@/components/ui/card';
@@ -12,60 +11,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '@/components/ui/tabs';
-import { 
-  PieChart, 
-  Pie, 
-  Cell, 
-  ResponsiveContainer,
-  Legend
-} from 'recharts';
-import { RefreshCw, UtensilsCrossed } from 'lucide-react';
+import { RefreshCw, Clock, Apple } from 'lucide-react';
 
 const Nutrition = () => {
-  const { meals, addMeal, dietGoal, nutritionTip, refreshTips, updateDietGoal } = useApp();
-  const [showMealForm, setShowMealForm] = useState(false);
+  const { meals, addMeal, dietGoal, updateDietGoal, nutritionTip, refreshTips } = useApp();
+  const [showForm, setShowForm] = useState(false);
   
   // Form state
   const [mealName, setMealName] = useState('');
-  const [mealTime, setMealTime] = useState('Breakfast');
   const [calories, setCalories] = useState('');
   const [carbs, setCarbs] = useState('');
   const [protein, setProtein] = useState('');
   const [fat, setFat] = useState('');
+  const [mealTime, setMealTime] = useState('Breakfast');
   
-  // Prepare data for macro pie chart
-  const macroData = [
-    { name: 'Carbs', value: dietGoal.carbsPercentage, color: '#a3e635' },
-    { name: 'Protein', value: dietGoal.proteinPercentage, color: '#9b87f5' },
-    { name: 'Fat', value: dietGoal.fatPercentage, color: '#d97706' },
-  ];
-  
-  // Calculate today's total nutrients
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  
-  const todaysMeals = meals.filter(meal => {
-    const mealDate = new Date(meal.date);
-    mealDate.setHours(0, 0, 0, 0);
-    return mealDate.getTime() === today.getTime();
-  });
-  
-  const totalNutrients = todaysMeals.reduce((acc, meal) => {
-    return {
-      calories: acc.calories + meal.calories,
-      carbs: acc.carbs + meal.carbs,
-      protein: acc.protein + meal.protein,
-      fat: acc.fat + meal.fat,
-    };
-  }, { calories: 0, carbs: 0, protein: 0, fat: 0 });
-  
-  // Handler for form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -88,49 +47,104 @@ const Nutrition = () => {
     
     // Reset form
     setMealName('');
-    setMealTime('Breakfast');
     setCalories('');
     setCarbs('');
     setProtein('');
     setFat('');
-    setShowMealForm(false);
+    setMealTime('Breakfast');
+    setShowForm(false);
   };
   
-  // Handler for diet goal change
-  const handleDietGoalChange = (type: 'Weight Loss' | 'Muscle Gain' | 'Balanced Health') => {
-    const goals = {
-      'Weight Loss': {
-        type: 'Weight Loss',
-        caloriesPerDay: 1800,
-        carbsPercentage: 40,
-        proteinPercentage: 30,
-        fatPercentage: 30,
-      },
-      'Muscle Gain': {
-        type: 'Muscle Gain',
-        caloriesPerDay: 2500,
-        carbsPercentage: 45,
-        proteinPercentage: 35,
-        fatPercentage: 20,
-      },
-      'Balanced Health': {
-        type: 'Balanced Health',
-        caloriesPerDay: 2200,
-        carbsPercentage: 45,
-        proteinPercentage: 30,
-        fatPercentage: 25,
-      },
-    };
+  // Diet goal selection
+  const handleDietGoalChange = (goalType: 'Weight Loss' | 'Muscle Gain' | 'Balanced Health') => {
+    let newGoal: typeof dietGoal = { ...dietGoal, type: goalType };
     
-    updateDietGoal(goals[type]);
+    // Adjust macros based on goal type
+    switch (goalType) {
+      case 'Weight Loss':
+        newGoal = {
+          type: 'Weight Loss',
+          caloriesPerDay: 1800,
+          carbsPercentage: 30,
+          proteinPercentage: 40,
+          fatPercentage: 30,
+        };
+        break;
+      case 'Muscle Gain':
+        newGoal = {
+          type: 'Muscle Gain',
+          caloriesPerDay: 2700,
+          carbsPercentage: 45,
+          proteinPercentage: 35,
+          fatPercentage: 20,
+        };
+        break;
+      case 'Balanced Health':
+        newGoal = {
+          type: 'Balanced Health',
+          caloriesPerDay: 2200,
+          carbsPercentage: 45,
+          proteinPercentage: 30,
+          fatPercentage: 25,
+        };
+        break;
+    }
+    
+    updateDietGoal(newGoal);
   };
 
   return (
     <div className="p-4 space-y-6 animate-fade-in">
       <div className="flex flex-col space-y-2">
-        <h2 className="text-2xl font-bold">Nutrition & Diet</h2>
-        <p className="text-muted-foreground">Personalized diet plans and meal tracking</p>
+        <h2 className="text-2xl font-bold">Nutrition Coach</h2>
+        <p className="text-muted-foreground">Track your diet and get personalized advice</p>
       </div>
+      
+      <Card className="p-5">
+        <h3 className="text-lg font-medium mb-3">Diet Goal</h3>
+        <div className="grid grid-cols-3 gap-2 mb-4">
+          <Button 
+            variant={dietGoal.type === 'Weight Loss' ? 'default' : 'outline'} 
+            onClick={() => handleDietGoalChange('Weight Loss')}
+            className={dietGoal.type === 'Weight Loss' ? 'bg-verolix-purple hover:bg-verolix-dark-purple' : ''}
+          >
+            Weight Loss
+          </Button>
+          <Button 
+            variant={dietGoal.type === 'Muscle Gain' ? 'default' : 'outline'}
+            onClick={() => handleDietGoalChange('Muscle Gain')}
+            className={dietGoal.type === 'Muscle Gain' ? 'bg-verolix-purple hover:bg-verolix-dark-purple' : ''}
+          >
+            Muscle Gain
+          </Button>
+          <Button 
+            variant={dietGoal.type === 'Balanced Health' ? 'default' : 'outline'} 
+            onClick={() => handleDietGoalChange('Balanced Health')}
+            className={dietGoal.type === 'Balanced Health' ? 'bg-verolix-purple hover:bg-verolix-dark-purple' : ''}
+          >
+            Balanced Health
+          </Button>
+        </div>
+        
+        <div className="space-y-2">
+          <div className="flex justify-between">
+            <span>Daily Calories Target:</span>
+            <span className="font-bold">{dietGoal.caloriesPerDay} kcal</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Carbs:</span>
+            <span>{dietGoal.carbsPercentage}% ({Math.round(dietGoal.caloriesPerDay * dietGoal.carbsPercentage / 400)}g)</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Protein:</span>
+            <span>{dietGoal.proteinPercentage}% ({Math.round(dietGoal.caloriesPerDay * dietGoal.proteinPercentage / 400)}g)</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Fat:</span>
+            <span>{dietGoal.fatPercentage}% ({Math.round(dietGoal.caloriesPerDay * dietGoal.fatPercentage / 900)}g)</span>
+          </div>
+        </div>
+      </Card>
       
       <Card className="p-5 border border-verolix-purple border-opacity-50">
         <div className="flex justify-between items-center mb-3">
@@ -149,100 +163,74 @@ const Nutrition = () => {
         </div>
       </Card>
       
-      <div className="mb-4">
-        <h3 className="text-lg font-medium mb-2">Diet Goal</h3>
-        <div className="flex gap-2">
-          <Button
-            variant={dietGoal.type === 'Weight Loss' ? 'default' : 'outline'}
-            onClick={() => handleDietGoalChange('Weight Loss')}
-            className={dietGoal.type === 'Weight Loss' ? 'bg-verolix-purple hover:bg-verolix-dark-purple' : ''}
-          >
-            Weight Loss
-          </Button>
-          <Button
-            variant={dietGoal.type === 'Muscle Gain' ? 'default' : 'outline'}
-            onClick={() => handleDietGoalChange('Muscle Gain')}
-            className={dietGoal.type === 'Muscle Gain' ? 'bg-verolix-purple hover:bg-verolix-dark-purple' : ''}
-          >
-            Muscle Gain
-          </Button>
-          <Button
-            variant={dietGoal.type === 'Balanced Health' ? 'default' : 'outline'}
-            onClick={() => handleDietGoalChange('Balanced Health')}
-            className={dietGoal.type === 'Balanced Health' ? 'bg-verolix-purple hover:bg-verolix-dark-purple' : ''}
-          >
-            Balanced Health
-          </Button>
-        </div>
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-medium">Food Journal</h3>
+        <Button 
+          onClick={() => setShowForm(!showForm)}
+          className="bg-verolix-purple hover:bg-verolix-dark-purple"
+        >
+          {showForm ? 'Cancel' : 'Add Meal'}
+        </Button>
       </div>
       
-      <div className="grid grid-cols-2 gap-4">
+      {showForm && (
         <Card className="p-4">
-          <h4 className="font-medium text-sm mb-3">Daily Calories</h4>
-          <div className="flex justify-between items-center">
-            <div>
-              <span className="block text-2xl font-bold">{totalNutrients.calories}</span>
-              <span className="text-xs text-gray-500">consumed</span>
-            </div>
-            <div className="text-right">
-              <span className="block text-lg font-medium">{dietGoal.caloriesPerDay}</span>
-              <span className="text-xs text-gray-500">target</span>
-            </div>
-          </div>
-        </Card>
-        
-        <Card className="p-4">
-          <h4 className="font-medium text-sm mb-2">Macros Distribution</h4>
-          <div className="h-24 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={macroData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={25}
-                  outerRadius={40}
-                  paddingAngle={2}
-                  dataKey="value"
-                >
-                  {macroData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Legend 
-                  layout="horizontal" 
-                  verticalAlign="bottom" 
-                  align="center"
-                  iconSize={8}
-                  iconType="circle"
-                  formatter={(value) => <span className="text-xs">{value}</span>}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </Card>
-      </div>
-      
-      <Card className="p-4">
-        <div className="flex justify-between items-center mb-3">
-          <h3 className="font-medium">Today's Meals</h3>
-          <Button 
-            onClick={() => setShowMealForm(!showMealForm)}
-            className="bg-verolix-purple hover:bg-verolix-dark-purple text-sm px-3 py-1 h-8"
-          >
-            {showMealForm ? 'Cancel' : 'Add Meal'}
-          </Button>
-        </div>
-        
-        {showMealForm && (
-          <form onSubmit={handleSubmit} className="space-y-4 mb-4 p-4 bg-gray-50 rounded-md">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <Label htmlFor="meal-name">Meal Name</Label>
               <Input 
                 id="meal-name"
                 value={mealName}
                 onChange={(e) => setMealName(e.target.value)}
-                placeholder="e.g. Oatmeal with Berries"
+                placeholder="e.g. Oatmeal, Salad"
+                required
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="calories">Calories</Label>
+              <Input 
+                id="calories"
+                type="number"
+                value={calories}
+                onChange={(e) => setCalories(e.target.value)}
+                placeholder="e.g. 300"
+                required
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="carbs">Carbs (g)</Label>
+              <Input 
+                id="carbs"
+                type="number"
+                value={carbs}
+                onChange={(e) => setCarbs(e.target.value)}
+                placeholder="e.g. 40"
+                required
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="protein">Protein (g)</Label>
+              <Input 
+                id="protein"
+                type="number"
+                value={protein}
+                onChange={(e) => setProtein(e.target.value)}
+                placeholder="e.g. 20"
+                required
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="fat">Fat (g)</Label>
+              <Input 
+                id="fat"
+                type="number"
+                value={fat}
+                onChange={(e) => setFat(e.target.value)}
+                placeholder="e.g. 15"
                 required
               />
             </div>
@@ -251,7 +239,7 @@ const Nutrition = () => {
               <Label htmlFor="meal-time">Meal Time</Label>
               <Select 
                 value={mealTime}
-                onValueChange={setMealTime}
+                onValueChange={(val) => setMealTime(val)}
               >
                 <SelectTrigger id="meal-time">
                   <SelectValue placeholder="Select meal time" />
@@ -265,101 +253,43 @@ const Nutrition = () => {
               </Select>
             </div>
             
-            <div className="grid grid-cols-2 gap-3">
+            <div className="pt-2">
+              <Button 
+                type="submit" 
+                className="w-full bg-verolix-purple hover:bg-verolix-dark-purple"
+              >
+                Save Meal
+              </Button>
+            </div>
+          </form>
+        </Card>
+      )}
+      
+      <div className="space-y-3">
+        {meals.map((meal) => (
+          <Card key={meal.id} className="p-4">
+            <div className="flex justify-between items-center">
               <div>
-                <Label htmlFor="calories">Calories</Label>
-                <Input 
-                  id="calories"
-                  type="number"
-                  value={calories}
-                  onChange={(e) => setCalories(e.target.value)}
-                  placeholder="e.g. 350"
-                  required
-                />
+                <h4 className="font-medium">{meal.name}</h4>
+                <div className="flex items-center space-x-4 text-sm text-gray-500 mt-1">
+                  <div className="flex items-center">
+                    <Clock className="h-3 w-3 mr-1" />
+                    <span>{meal.time}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Apple className="h-3 w-3 mr-1" />
+                    <span>{meal.calories} calories</span>
+                  </div>
+                </div>
               </div>
-              
-              <div>
-                <Label htmlFor="carbs">Carbs (g)</Label>
-                <Input 
-                  id="carbs"
-                  type="number"
-                  value={carbs}
-                  onChange={(e) => setCarbs(e.target.value)}
-                  placeholder="e.g. 45"
-                  required
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="protein">Protein (g)</Label>
-                <Input 
-                  id="protein"
-                  type="number"
-                  value={protein}
-                  onChange={(e) => setProtein(e.target.value)}
-                  placeholder="e.g. 20"
-                  required
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="fat">Fat (g)</Label>
-                <Input 
-                  id="fat"
-                  type="number"
-                  value={fat}
-                  onChange={(e) => setFat(e.target.value)}
-                  placeholder="e.g. 10"
-                  required
-                />
+              <div className="text-right">
+                <span className="font-medium text-lg">{meal.protein}g</span>
+                <p className="text-xs text-gray-500">protein</p>
               </div>
             </div>
-            
-            <Button 
-              type="submit" 
-              className="w-full bg-verolix-purple hover:bg-verolix-dark-purple"
-            >
-              Save Meal
-            </Button>
-          </form>
-        )}
-        
-        {todaysMeals.length === 0 ? (
-          <div className="flex flex-col items-center justify-center text-center p-6">
-            <UtensilsCrossed className="h-10 w-10 text-gray-400 mb-2" />
-            <p className="text-sm text-gray-500">No meals logged today</p>
-            <Button 
-              variant="link" 
-              className="text-verolix-purple mt-1"
-              onClick={() => setShowMealForm(true)}
-            >
-              Add your first meal
-            </Button>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {todaysMeals.map((meal) => (
-              <div key={meal.id} className="p-3 border rounded-md">
-                <div className="flex justify-between">
-                  <div>
-                    <span className="font-medium">{meal.name}</span>
-                    <span className="text-xs text-gray-500 ml-2">{meal.time}</span>
-                  </div>
-                  <div className="text-right">
-                    <span className="font-medium">{meal.calories}</span>
-                    <span className="text-xs text-gray-500 ml-1">cal</span>
-                  </div>
-                </div>
-                <div className="flex justify-between text-xs text-gray-500 mt-1">
-                  <span>Carbs: {meal.carbs}g</span>
-                  <span>Protein: {meal.protein}g</span>
-                  <span>Fat: {meal.fat}g</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </Card>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };

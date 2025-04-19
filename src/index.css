@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -97,5 +98,42 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* AI Chat typing animation */
+.dot-typing {
+  position: relative;
+  left: -9999px;
+  width: 6px;
+  height: 6px;
+  border-radius: 5px;
+  background-color: #9b87f5;
+  color: #9b87f5;
+  box-shadow: 9984px 0 0 0 #9b87f5, 9999px 0 0 0 #9b87f5, 10014px 0 0 0 #9b87f5;
+  animation: dot-typing 1.5s infinite linear;
+}
+
+@keyframes dot-typing {
+  0% {
+    box-shadow: 9984px 0 0 0 #9b87f5, 9999px 0 0 0 #9b87f5, 10014px 0 0 0 #9b87f5;
+  }
+  16.667% {
+    box-shadow: 9984px -5px 0 0 #9b87f5, 9999px 0 0 0 #9b87f5, 10014px 0 0 0 #9b87f5;
+  }
+  33.333% {
+    box-shadow: 9984px 0 0 0 #9b87f5, 9999px 0 0 0 #9b87f5, 10014px 0 0 0 #9b87f5;
+  }
+  50% {
+    box-shadow: 9984px 0 0 0 #9b87f5, 9999px -5px 0 0 #9b87f5, 10014px 0 0 0 #9b87f5;
+  }
+  66.667% {
+    box-shadow: 9984px 0 0 0 #9b87f5, 9999px 0 0 0 #9b87f5, 10014px 0 0 0 #9b87f5;
+  }
+  83.333% {
+    box-shadow: 9984px 0 0 0 #9b87f5, 9999px 0 0 0 #9b87f5, 10014px -5px 0 0 #9b87f5;
+  }
+  100% {
+    box-shadow: 9984px 0 0 0 #9b87f5, 9999px 0 0 0 #9b87f5, 10014px 0 0 0 #9b87f5;
   }
 }

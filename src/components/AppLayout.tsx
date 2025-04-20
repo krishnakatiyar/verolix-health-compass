@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useApp } from '@/contexts/AppContext';
 import { Button } from '@/components/ui/button';
@@ -24,22 +23,22 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   };
   
   return (
-    <div className="flex flex-col h-screen bg-verolix-background">
+    <div className="flex flex-col h-screen bg-gray-50">
       {/* App Header */}
-      <header className="flex justify-between items-center p-4 bg-white shadow-sm border-b border-verolix-lavender">
+      <header className="flex justify-between items-center p-4 bg-white shadow-sm">
         <div className="flex items-center">
           <img 
             src="/lovable-uploads/a4ce769e-0c7e-4625-89c4-52aff9871764.png" 
             alt="App Logo" 
             className="h-8 w-8 mr-2"
           />
-          <h1 className="text-xl font-bold text-verolix-navy">Verolix</h1>
+          <h1 className="text-xl font-bold text-verolix-purple">Verolix</h1>
         </div>
         
         <Button variant="ghost" className="rounded-full" onClick={handleProfileClick}>
           <Avatar className="h-8 w-8">
             <AvatarImage src="" />
-            <AvatarFallback className="bg-verolix-teal text-white">
+            <AvatarFallback className="bg-verolix-purple text-white">
               {userProfile.name.charAt(0)}
             </AvatarFallback>
           </Avatar>
@@ -52,15 +51,11 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       </main>
       
       {/* Bottom Navigation */}
-      <nav className="bg-white border-t border-verolix-lavender flex justify-around py-2">
+      <nav className="bg-white border-t border-gray-200 flex justify-around py-2">
         <Button
           variant="ghost"
           size="sm"
-          className={`flex flex-col items-center px-4 ${
-            activeTab === 'home' 
-              ? 'text-verolix-teal bg-verolix-light-lavender' 
-              : 'text-verolix-neutral hover:text-verolix-navy hover:bg-verolix-lavender/50'
-          }`}
+          className={`flex flex-col items-center px-4 ${activeTab === 'home' ? 'text-verolix-purple' : 'text-gray-500'}`}
           onClick={() => handleTabChange('home')}
         >
           <Home className="h-5 w-5" />
@@ -70,11 +65,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         <Button
           variant="ghost"
           size="sm"
-          className={`flex flex-col items-center px-4 ${
-            activeTab === 'fitness' 
-              ? 'text-verolix-teal bg-verolix-light-lavender' 
-              : 'text-verolix-neutral hover:text-verolix-navy hover:bg-verolix-lavender/50'
-          }`}
+          className={`flex flex-col items-center px-4 ${activeTab === 'fitness' ? 'text-verolix-purple' : 'text-gray-500'}`}
           onClick={() => handleTabChange('fitness')}
         >
           <Dumbbell className="h-5 w-5" />
@@ -84,11 +75,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         <Button
           variant="ghost"
           size="sm"
-          className={`flex flex-col items-center px-4 ${
-            activeTab === 'nutrition' 
-              ? 'text-verolix-teal bg-verolix-light-lavender' 
-              : 'text-verolix-neutral hover:text-verolix-navy hover:bg-verolix-lavender/50'
-          }`}
+          className={`flex flex-col items-center px-4 ${activeTab === 'nutrition' ? 'text-verolix-purple' : 'text-gray-500'}`}
           onClick={() => handleTabChange('nutrition')}
         >
           <Apple className="h-5 w-5" />
@@ -98,11 +85,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         <Button
           variant="ghost"
           size="sm"
-          className={`flex flex-col items-center px-4 ${
-            activeTab === 'chat' 
-              ? 'text-verolix-teal bg-verolix-light-lavender' 
-              : 'text-verolix-neutral hover:text-verolix-navy hover:bg-verolix-lavender/50'
-          }`}
+          className={`flex flex-col items-center px-4 ${activeTab === 'chat' ? 'text-verolix-purple' : 'text-gray-500'}`}
           onClick={() => handleTabChange('chat')}
         >
           <MessageSquare className="h-5 w-5" />

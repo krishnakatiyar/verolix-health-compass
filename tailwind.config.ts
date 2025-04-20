@@ -1,25 +1,26 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
-  darkMode: ["class"],
-  content: [
-    "./pages/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-    "./app/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",
-  ],
-  prefix: "",
-  theme: {
-    container: {
-      center: true,
-      padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
-    },
-    extend: {
-      colors: {
-        border: 'hsl(var(--border))',
+	darkMode: ["class"],
+	content: [
+		"./pages/**/*.{ts,tsx}",
+		"./components/**/*.{ts,tsx}",
+		"./app/**/*.{ts,tsx}",
+		"./src/**/*.{ts,tsx}",
+	],
+	prefix: "",
+	theme: {
+		container: {
+			center: true,
+			padding: '2rem',
+			screens: {
+				'2xl': '1400px'
+			}
+		},
+		extend: {
+			colors: {
+				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
@@ -62,21 +63,18 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-        
-        // Verolix custom colors - updated for new scheme
-        verolix: {
-          'lavender': '#E6E6FA',  // Whitish lavender
-          'light-lavender': '#F0F0FF', // Lighter shade for backgrounds
-          'teal': '#40B4B4',      // Vibrant teal blue
-          'light-teal': '#5CCACA', // Lighter teal for hover states
-          'navy': '#1E3A8A',      // Bright navy blue
-          'light-navy': '#2563EB', // Lighter navy for accents
-          'accent': '#7C3AED',    // Vibrant purple accent
-          'neutral': '#9CA3AF',   // Neutral gray
-          'background': '#F8F9FF', // Light background with slight lavender tint
-        }
-      },
-      borderRadius: {
+				// Verolix custom colors
+				verolix: {
+					blue: '#D3E4FD',
+					green: '#F2FCE2',
+					purple: '#9b87f5',
+					'dark-purple': '#7E69AB',
+					'sky-blue': '#33C3F0',
+					'neutral-gray': '#8E9196',
+					'light-gray': '#F1F0FB',
+				}
+			},
+			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
@@ -114,7 +112,7 @@ export default {
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'fade-in': 'fade-in 0.5s ease-out'
 			}
-    },
-  },
-  plugins: [require("tailwindcss-animate")],
+		}
+	},
+	plugins: [require("tailwindcss-animate")],
 } satisfies Config;

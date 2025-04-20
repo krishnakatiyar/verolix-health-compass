@@ -1,13 +1,39 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { useApp } from '@/contexts/AppContext';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
-import { RefreshCw, Footprints, Flame, Moon, Droplets } from 'lucide-react';
+import { 
+  RefreshCw, 
+  Footprints, 
+  Flame, 
+  Moon, 
+  Droplets,
+  GlassWater 
+} from 'lucide-react';
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogTrigger 
+} from "@/components/ui/dialog";
+import { Slider } from "@/components/ui/slider";
+import { useToast } from '@/components/ui/use-toast';
 
 const Home = () => {
-  const { healthStats, behaviorTip, refreshTips } = useApp();
+  const { healthStats, behaviorTip, refreshTips, updateHealthStats } = useApp();
+  const [waterAmount, setWaterAmount] = useState(250); // Default to 250ml
+  const { toast } = useToast();
+
+  const handleWaterIntake = () => {
+    const newWaterIntake = healthStats.waterIntake + waterAmount;
+    updateHealthStats({ waterIntake: newWaterIntake });
+    toast({
+      title: "Water intake updated",
+      description: `Added ${waterAmount}ml of water. Total: ${newWaterIntake}ml`,
+    });
+  };
 
   return (
     <div className="p-4 space-y-6 animate-fade-in">
@@ -51,7 +77,7 @@ const Home = () => {
         </Card>
         
         {/* Water Card */}
-        <Card className="p-4 bg-verolix-green bg-opacity-30">
+        <Card className="p-4 bg-verolix-green bg-opacity-30 relative">
           <div className="flex flex-col items-center justify-center text-center">
             <Droplets className="h-8 w-8 text-verolix-dark-purple mb-2" />
             <span className="text-sm font-medium">Water</span>
@@ -59,6 +85,42 @@ const Home = () => {
             <Progress className="h-2 mt-2" value={(healthStats.waterIntake / 2500) * 100} />
             <span className="text-xs text-gray-500 mt-1">Goal: 2.5L</span>
           </div>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="absolute top-2 right-2 gap-2"
+              >
+                <GlassWater className="h-4 w-4" />
+                Add
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Track Water Intake</DialogTitle>
+              </DialogHeader>
+              <div className="py-4 space-y-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Amount (ml)</label>
+                  <div className="flex items-center gap-4">
+                    <Slider
+                      value={[waterAmount]}
+                      onValueChange={(value) => setWaterAmount(value[0])}
+                      min={50}
+                      max={1000}
+                      step={50}
+                      className="flex-grow"
+                    />
+                    <span className="text-sm font-medium w-16">{waterAmount}ml</span>
+                  </div>
+                </div>
+                <Button onClick={handleWaterIntake} className="w-full">
+                  Add Water Intake
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </Card>
       </div>
 

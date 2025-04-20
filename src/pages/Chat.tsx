@@ -3,17 +3,9 @@ import { useApp } from '@/contexts/AppContext';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Send, Bot, User, GlassWater } from 'lucide-react';
+import { Send, Bot, User } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Slider } from "@/components/ui/slider";
 
 const Chat = () => {
   const { userProfile, healthStats, updateHealthStats } = useApp();
@@ -95,41 +87,7 @@ const Chat = () => {
     <div className="p-4 space-y-4 animate-fade-in h-full flex flex-col">
       <div className="flex flex-col space-y-2">
         <h2 className="text-2xl font-bold">AI Health Assistant</h2>
-        <div className="flex justify-between items-center">
-          <p className="text-muted-foreground">Ask me anything about health and fitness</p>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-2">
-                <GlassWater className="h-4 w-4" />
-                Add Water
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Track Water Intake</DialogTitle>
-              </DialogHeader>
-              <div className="py-4 space-y-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Amount (ml)</label>
-                  <div className="flex items-center gap-4">
-                    <Slider
-                      value={[waterAmount]}
-                      onValueChange={(value) => setWaterAmount(value[0])}
-                      min={50}
-                      max={1000}
-                      step={50}
-                      className="flex-grow"
-                    />
-                    <span className="text-sm font-medium w-16">{waterAmount}ml</span>
-                  </div>
-                </div>
-                <Button onClick={handleWaterIntake} className="w-full">
-                  Add Water Intake
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
-        </div>
+        <p className="text-muted-foreground">Ask me anything about health and fitness</p>
       </div>
       
       <Card className="flex-grow p-4 flex flex-col overflow-hidden">

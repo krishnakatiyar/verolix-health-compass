@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useApp } from '@/contexts/AppContext';
 import { Button } from '@/components/ui/button';
@@ -15,6 +16,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const [showProfileSheet, setShowProfileSheet] = useState(false);
   
   const handleTabChange = (tab: 'home' | 'fitness' | 'nutrition' | 'chat') => {
+    if (tab === 'home' && showProfileSheet) {
+      setShowProfileSheet(false);
+    }
     setActiveTab(tab);
   };
   

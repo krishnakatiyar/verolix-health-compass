@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
 import { useApp } from '@/contexts/AppContext';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Home, Dumbbell, Apple, MessageSquare, User, Menu } from 'lucide-react';
+import { Home, Dumbbell, Apple, MessageSquare, User } from 'lucide-react';
 import Profile from '@/pages/Profile';
 
 interface AppLayoutProps {
@@ -28,54 +27,11 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       {/* App Header */}
       <header className="flex justify-between items-center p-4 bg-white shadow-sm">
         <div className="flex items-center">
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden mr-2">
-                <Menu className="h-5 w-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="w-64 pt-10">
-              <div className="flex flex-col h-full">
-                <div className="space-y-2">
-                  <Button
-                    variant="ghost"
-                    className={`w-full justify-start ${activeTab === 'home' ? 'bg-verolix-light-gray text-verolix-purple' : ''}`}
-                    onClick={() => handleTabChange('home')}
-                  >
-                    <Home className="mr-2 h-5 w-5" />
-                    Home
-                  </Button>
-                  
-                  <Button
-                    variant="ghost"
-                    className={`w-full justify-start ${activeTab === 'fitness' ? 'bg-verolix-light-gray text-verolix-purple' : ''}`}
-                    onClick={() => handleTabChange('fitness')}
-                  >
-                    <Dumbbell className="mr-2 h-5 w-5" />
-                    Fitness
-                  </Button>
-                  
-                  <Button
-                    variant="ghost"
-                    className={`w-full justify-start ${activeTab === 'nutrition' ? 'bg-verolix-light-gray text-verolix-purple' : ''}`}
-                    onClick={() => handleTabChange('nutrition')}
-                  >
-                    <Apple className="mr-2 h-5 w-5" />
-                    Nutrition
-                  </Button>
-                  
-                  <Button
-                    variant="ghost"
-                    className={`w-full justify-start ${activeTab === 'chat' ? 'bg-verolix-light-gray text-verolix-purple' : ''}`}
-                    onClick={() => handleTabChange('chat')}
-                  >
-                    <MessageSquare className="mr-2 h-5 w-5" />
-                    Chat
-                  </Button>
-                </div>
-              </div>
-            </SheetContent>
-          </Sheet>
+          <img 
+            src="/lovable-uploads/a4ce769e-0c7e-4625-89c4-52aff9871764.png" 
+            alt="App Logo" 
+            className="h-8 w-8 mr-2"
+          />
           <h1 className="text-xl font-bold text-verolix-purple">Verolix</h1>
         </div>
         

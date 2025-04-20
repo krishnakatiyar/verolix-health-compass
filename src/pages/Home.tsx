@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
 import { useToast } from '@/components/ui/use-toast';
+import '../styles/animations.css';
 
 const Home = () => {
   const { healthStats, behaviorTip, refreshTips, updateHealthStats } = useApp();
@@ -46,7 +47,7 @@ const Home = () => {
         {/* Steps Card */}
         <Card className="p-4 bg-verolix-blue bg-opacity-30">
           <div className="flex flex-col items-center justify-center text-center">
-            <Footprints className="h-8 w-8 text-verolix-dark-purple mb-2" />
+            <Footprints className="h-8 w-8 text-verolix-dark-purple mb-2 icon-walk" />
             <span className="text-sm font-medium">Steps</span>
             <span className="text-2xl font-bold">{healthStats.steps.toLocaleString()}</span>
             <Progress className="h-2 mt-2" value={(healthStats.steps / 10000) * 100} />
@@ -57,7 +58,7 @@ const Home = () => {
         {/* Calories Card */}
         <Card className="p-4 bg-verolix-green bg-opacity-30">
           <div className="flex flex-col items-center justify-center text-center">
-            <Flame className="h-8 w-8 text-verolix-dark-purple mb-2" />
+            <Flame className="h-8 w-8 text-verolix-dark-purple mb-2 icon-flame" />
             <span className="text-sm font-medium">Calories</span>
             <span className="text-2xl font-bold">{healthStats.caloriesBurned}</span>
             <Progress className="h-2 mt-2" value={(healthStats.caloriesBurned / 500) * 100} />
@@ -68,7 +69,7 @@ const Home = () => {
         {/* Sleep Card */}
         <Card className="p-4 bg-verolix-blue bg-opacity-30">
           <div className="flex flex-col items-center justify-center text-center">
-            <Moon className="h-8 w-8 text-verolix-dark-purple mb-2" />
+            <Moon className="h-8 w-8 text-verolix-dark-purple mb-2 icon-moon" />
             <span className="text-sm font-medium">Sleep</span>
             <span className="text-2xl font-bold">{healthStats.sleepHours} hrs</span>
             <Progress className="h-2 mt-2" value={(healthStats.sleepHours / 8) * 100} />
@@ -79,7 +80,7 @@ const Home = () => {
         {/* Water Card */}
         <Card className="p-4 bg-verolix-green bg-opacity-30 relative">
           <div className="flex flex-col items-center justify-center text-center">
-            <Droplets className="h-8 w-8 text-verolix-dark-purple mb-2" />
+            <Droplets className="h-8 w-8 text-verolix-dark-purple mb-2 icon-droplet" />
             <span className="text-sm font-medium">Water</span>
             <span className="text-2xl font-bold">{(healthStats.waterIntake / 1000).toFixed(1)}L</span>
             <Progress className="h-2 mt-2" value={(healthStats.waterIntake / 2500) * 100} />

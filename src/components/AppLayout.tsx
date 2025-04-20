@@ -28,9 +28,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       <header className="flex justify-between items-center p-4 bg-white shadow-sm">
         <div className="flex items-center">
           <img 
-            src="/lovable-uploads/a4ce769e-0c7e-4625-89c4-52aff9871764.png" 
+            src="/lovable-uploads/49363888-4af3-4aa1-801d-e7c51151645e.png" 
             alt="App Logo" 
-            className="h-8 w-8 mr-2"
+            className="h-10 w-10 mr-2"
           />
           <h1 className="text-xl font-bold text-verolix-purple">Verolix</h1>
         </div>
